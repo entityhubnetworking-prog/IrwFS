@@ -5,23 +5,11 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          generate_release_notes: true
-
   build-windows:
-    needs: create-release
     runs-on: windows-latest
     steps:
       - name: Checkout code
@@ -48,7 +36,6 @@ jobs:
             desktop-app/dist/*.msi
 
   build-linux:
-    needs: create-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -72,9 +59,8 @@ jobs:
         with:
           files: desktop-app/dist/*.AppImage
 
-  build-android:
-    needs: create-release
-    runs-on: ubuntu-latest
+  build-mac:
+    runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -84,26 +70,15 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install dependencies
-        working-directory: mobile-app
+        working-directory: desktop-app
         run: npm install
 
-      - name: Build Release APK
-        working-directory: mobile-app/android
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleRelease
+      - name: Build macOS app
+        working-directory: desktop-app
+        run: npm run build:mac
 
-      - name: Upload APK Release
+      - name: Upload macOS Release
         uses: softprops/action-gh-release@v1
         with:
-          files: mobile-app/android/app/build/outputs/apk/release/app-release.apk
+          files: desktop-app/dist/*.dmg
