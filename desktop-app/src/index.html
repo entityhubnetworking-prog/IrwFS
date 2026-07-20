@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: http: https:; connect-src http://3.84.94.77:8000;">
+    <title>IrwFS Face Swap</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen active">
+            <div class="login-container">
+                <div class="logo">
+                    <h1>🎭 IrwFS</h1>
+                    <p>Face Swap Ecosystem</p>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="register">Register</button>
+                </div>
+                
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <p class="error-message" id="login-error"></p>
+                </form>
+                
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" required placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-fullname">Full Name (optional)</label>
+                        <input type="text" id="reg-fullname" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" required placeholder="Min 8 characters">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <p class="error-message" id="register-error"></p>
+                    <p class="success-message" id="register-success"></p>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Main App Screen -->
+        <div id="main-screen" class="screen">
+            <header>
+                <div class="header-left">
+                    <h1>🎭 IrwFS</h1>
+                </div>
+                <div class="header-right">
+                    <span id="user-info"></span>
+                    <button id="logout-btn" class="btn btn-small">Logout</button>
+                </div>
+            </header>
+            
+            <nav class="sidebar">
+                <button class="nav-btn active" data-view="swap">
+                    <span class="icon">🔄</span>
+                    <span>Face Swap</span>
+                </button>
+                <button class="nav-btn" data-view="history">
+                    <span class="icon">📋</span>
+                    <span>History</span>
+                </button>
+                <button class="nav-btn" data-view="settings">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </button>
+            </nav>
+            
+            <main class="content">
+                <!-- Swap View -->
+                <div id="swap-view" class="view active">
+                    <h2>Face Swap</h2>
+                    
+                    <div class="swap-type-selector">
+                        <button class="type-btn active" data-type="image">📷 Image</button>
+                        <button class="type-btn" data-type="video">🎬 Video</button>
+                    </div>
+                    
+                    <div class="swap-container">
+                        <div class="upload-box" id="source-box">
+                            <div class="upload-content">
+                                <span class="upload-icon">👤</span>
+                                <p>Source Face</p>
+                                <button class="btn btn-secondary" id="select-source-btn">Select Image</button>
+                                <p class="file-name" id="source-name"></p>
+                            </div>
+                            <img id="source-preview" class="preview-image" style="display:none;">
+                        </div>
+                        
+                        <div class="arrow">➡️</div>
+                        
+                        <div class="upload-box" id="target-box">
+                            <div class="upload-content">
+                                <span class="upload-icon">🖼️</span>
+                                <p>Target <span id="target-type">Image</span></p>
+                                <button class="btn btn-secondary" id="select-target-btn">Select Image</button>
+                                <p class="file-name" id="target-name"></p>
+                            </div>
+                            <img id="target-preview" class="preview-image" style="display:none;">
+                        </div>
+                    </div>
+                    
+                    <div class="action-area">
+                        <button id="swap-btn" class="btn btn-primary btn-large" disabled>
+                            🔄 Start Face Swap
+                        </button>
+                        <div id="swap-progress" class="progress-container" style="display:none;">
+                            <div class="spinner"></div>
+                            <p>Processing...</p>
+                        </div>
+                    </div>
+                    
+                    <div id="result-area" class="result-area" style="display:none;">
+                        <h3>Result</h3>
+                        <img id="result-preview" class="result-image">
+                        <div class="result-actions">
+                            <button id="download-btn" class="btn btn-primary">📥 Download</button>
+                            <button id="new-swap-btn" class="btn btn-secondary">New Swap</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- History View -->
+                <div id="history-view" class="view">
+                    <h2>History</h2>
+                    <div id="history-list" class="history-list">
+                        <p class="loading">Loading history...</p>
+                    </div>
+                </div>
+                
+                <!-- Settings View -->
+                <div id="settings-view" class="view">
+                    <h2>Settings</h2>
+                    <div class="settings-container">
+                        <div class="setting-item">
+                            <label>API Server</label>
+                            <input type="text" value="http://3.84.94.77:8000" readonly>
+                        </div>
+                        <div class="setting-item">
+                            <label>Theme</label>
+                            <select id="theme-select">
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <h3>Account Info</h3>
+                            <div id="account-info"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- Notification -->
+        <div id="notification" class="notification"></div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

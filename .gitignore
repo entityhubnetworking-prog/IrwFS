@@ -1,0 +1,79 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Secrets
+*.pem
+*.key
+secrets/
+
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.AppImage
+*.exe
+*.dmg
+*.deb
+*.rpm
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+*.egg-info/
+.eggs/
+
+# Android
+*.apk
+*.aab
+android/app/build/
+android/.gradle/
+.gradle/
+
+# iOS
+*.ipa
+ios/build/
+ios/Pods/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+.npm/
+.yarn/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Lock files (optional - uncomment if needed)
+# package-lock.json
+# yarn.lock
