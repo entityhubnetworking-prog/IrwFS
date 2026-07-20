@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
     paths:
       - 'mobile-app/**'
+      - '.github/workflows/android-build.yml'
   pull_request:
     branches: [ main, master ]
     paths:
@@ -34,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: mobile-app
-        run: npm ci
+        run: npm install
 
       - name: Make gradlew executable
         working-directory: mobile-app/android
