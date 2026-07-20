@@ -19,11 +19,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         working-directory: desktop-app
+        shell: bash
         run: |
-          npm install --legacy-peer-deps || npm install
+          if [ -f package-lock.json ]; then
+            npm ci --legacy-peer-deps || npm ci
+          else
+            npm install --legacy-peer-deps || npm install
+          fi
 
       - name: Build Windows app
         working-directory: desktop-app
@@ -46,11 +52,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         working-directory: desktop-app
+        shell: bash
         run: |
-          npm install --legacy-peer-deps || npm install
+          if [ -f package-lock.json ]; then
+            npm ci --legacy-peer-deps || npm ci
+          else
+            npm install --legacy-peer-deps || npm install
+          fi
 
       - name: Build Linux app
         working-directory: desktop-app
@@ -71,11 +83,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         working-directory: desktop-app
+        shell: bash
         run: |
-          npm install --legacy-peer-deps || npm install
+          if [ -f package-lock.json ]; then
+            npm ci --legacy-peer-deps || npm ci
+          else
+            npm install --legacy-peer-deps || npm install
+          fi
 
       - name: Build macOS app
         working-directory: desktop-app
