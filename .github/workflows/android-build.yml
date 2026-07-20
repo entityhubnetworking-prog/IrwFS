@@ -37,13 +37,9 @@ jobs:
         working-directory: mobile-app
         run: npm install
 
-      - name: Make gradlew executable
-        working-directory: mobile-app/android
-        run: chmod +x gradlew
-
       - name: Build Release APK
         working-directory: mobile-app/android
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
