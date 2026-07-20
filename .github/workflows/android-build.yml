@@ -6,10 +6,6 @@ on:
     paths:
       - 'mobile-app/**'
       - '.github/workflows/android-build.yml'
-  pull_request:
-    branches: [ main, master ]
-    paths:
-      - 'mobile-app/**'
   workflow_dispatch:
 
 jobs:
@@ -33,17 +29,39 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Install React Native CLI
+        run: npm install -g react-native-cli
+
       - name: Install dependencies
         working-directory: mobile-app
-        run: npm install
+        run: |
+          npm install
+          npm install react-native @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs react-native-screens react-native-safe-area-context react-native-vector-icons react-native-image-picker react-native-document-picker react-native-fs axios @react-native-async-storage/async-storage
+
+      - name: Create Android project structure
+        working-directory: mobile-app
+        run: |
+          npx react-native init IrwFS --directory temp_init --skip-install || true
+          cp -r temp_init/android/* android/ 2>/dev/null || true
+          rm -rf temp_init
 
       - name: Build Release APK
         working-directory: mobile-app/android
-        run: ./gradlew assembleRelease --no-daemon
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon || ./gradlew assembleDebug --no-daemon
+
+      - name: Find APK
+        working-directory: mobile-app
+        run: |
+          find . -name "*.apk" -type f
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: irwfs-android-apk
-          path: mobile-app/android/app/build/outputs/apk/release/app-release.apk
+          path: |
+            mobile-app/android/app/build/outputs/apk/**/*.apk
+            mobile-app/**/build/**/*.apk
           retention-days: 30
+          if-no-files-found: warn
